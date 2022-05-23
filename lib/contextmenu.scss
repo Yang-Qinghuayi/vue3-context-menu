@@ -19,8 +19,11 @@
         display: flex;
         align-items: center;
         user-select: none;
-        :deep(.v-list-item-title) {
+        .v-list-item-title {
           font-size: 0.875rem;
+        }
+        &.v-list-item--disabled {
+          filter: opacity(0.6);
         }
       }
     }

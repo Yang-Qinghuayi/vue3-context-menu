@@ -66,6 +66,7 @@ export default defineComponent({
     if (!this.show) return []
 
     return h(ContextSubMenuConstructor, {
+      theme: this.options.theme,
       items: this.options.items,
       parentItem: {
         maxWidth: this.options.maxWidth || MenuConstOptions.defaultMaxWidth,

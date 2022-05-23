@@ -1,13 +1,14 @@
 <template>
   <v-sheet
     v-if="items"
+    :theme="theme"
     ref="menu"
     :elevation="2"
     class="rounded mx-context-menu bg-surface py-0"
     :class="{
       'menu-overflow': menuOverflow,
       ready: menuReady,
-      [options.customClass]: options.customClass,
+      [options.customClass as string]: options.customClass,
     }"
     :style="{
       maxWidth:
@@ -86,6 +87,7 @@
       :items="activeItem.children"
       :parent-item="activeItem"
       :options="options"
+      :theme="theme"
       :global-data="childGlobalData"
       :position="childPosition"
       @close="onChildrenClose"
@@ -97,7 +99,7 @@
 
 <script lang="ts">
 import { mdiMenuDown, mdiMenuRight, mdiMenuUp } from "@mdi/js";
-import type { PropType } from "vue";
+import type { PropType, ComponentPublicInstance } from "vue";
 import {
   defineComponent,
   onBeforeUnmount,
@@ -105,7 +107,7 @@ import {
   ref,
   toRefs,
   watch,
-  nextTick
+  nextTick,
 } from "vue";
 
 import { useElementBounding, useElementSize } from "@vueuse/core";
@@ -143,12 +145,16 @@ export default defineComponent({
       type: Object as PropType<ContextMenuPositionData>,
       default: null,
     },
+    theme: {
+      type: String,
+      default: "light",
+    },
   },
   emits: ["close", "keepOpen", "preUpdatePos"],
   setup(prop, context) {
     const { globalData, position, options, parentItem } = toRefs(prop);
 
-    const menu = ref<HTMLElement>();
+    const menu = ref<ComponentPublicInstance>();
     const childMenu = ref();
     const menuReady = ref(false);
     const menuOverflow = ref(false);
@@ -163,7 +169,7 @@ export default defineComponent({
       x: 0,
       y: 0,
     });
-    const menuHeight = ref(0)
+    const menuHeight = ref(0);
 
     //显示和隐藏子菜单
     function showChildItem(e: Event, item: MenuItem) {
@@ -236,7 +242,7 @@ export default defineComponent({
     //滚动
     function onScroll(down: boolean) {
       if (menu.value) {
-        menu.value.scrollTop += down ? 30 : -30;
+        menu.value.$el.scrollTop += down ? 30 : -30;
       }
     }
 
@@ -255,13 +261,13 @@ export default defineComponent({
         //如果X绝对位置超出屏幕，那么减去超出的宽度
         // todo 溢出pin到左侧
         const absRight =
-          _globalData.parentPosition.x + position.value.x + _menu.offsetWidth;
+          _globalData.parentPosition.x + position.value.x + _menu.$el.offsetWidth;
         if (absRight > _globalData.screenSize.w) {
           newPos.x -= absRight - _globalData.screenSize.w;
         }
 
         //如果高度超出屏幕，那么限制最高高度
-        if (_menu.offsetHeight > _globalData.screenSize.h - 30) {
+        if (_menu.$el.offsetHeight > _globalData.screenSize.h - 30) {
           maxHeight.value = _globalData.screenSize.h - 30;
           //  强制限制Y坐标为0
           newPos.y = -_globalData.parentPosition.y;
@@ -273,7 +279,7 @@ export default defineComponent({
           const absTop =
             _globalData.parentPosition.y +
             position.value.y +
-            _menu.offsetHeight;
+            _menu.$el.offsetHeight;
           if (absTop > _globalData.screenSize.h) {
             newPos.y -= absTop - _globalData.screenSize.h + 30;
           }
@@ -285,7 +291,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      startAnimation()
+      startAnimation();
       solveOverflowTimeOut = window.setTimeout(() => doCheckPos(), 100);
     });
     onBeforeUnmount(() => {
@@ -295,12 +301,12 @@ export default defineComponent({
       }
     });
     async function startAnimation() {
-      await nextTick()
-      const el = menu.value?.$el as HTMLElement
-      const height = el.scrollHeight ?? 0
-      menuHeight.value = height
-      el.style.animation = 'menuAnimation 0.4s 0s both'
-      el.style.overflow = 'visible'
+      await nextTick();
+      const el = menu.value?.$el ;
+      const height = el.scrollHeight ?? 0;
+      menuHeight.value = height;
+      el.style.animation = "menuAnimation 0.4s 0s both";
+      el.style.overflow = "visible";
     }
     return {
       menu,

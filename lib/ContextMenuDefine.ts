@@ -7,6 +7,7 @@ export const MenuConstOptions = {
 }
 
 export interface MenuOptions {
+  theme?: string
   items: MenuItem[]
   x: number
   y: number

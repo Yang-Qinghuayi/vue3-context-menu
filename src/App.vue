@@ -3,7 +3,7 @@
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 import logo from "./assets/logo.png";
 import { mdiFaceMan, mdiUndo, mdiCopyleft, mdiPacMan } from "@mdi/js";
-import { useContextMenu } from "../dist/vuetify-ctx-menu.es";
+import { useContextMenu } from "../lib/ContextMenuInstance";
 const contextMeun = useContextMenu();
 const menus = [
     {
@@ -83,7 +83,9 @@ const menus = [
     },
   ];
 function openMenu(e: MouseEvent) {
+  console.log("🚀 ~ file: App.vue ~ line 87 ~ openMenu ~ performance.now()", performance.now())
   contextMeun({
+    theme: 'dark',
     x: e.x,
     y: e.y,
     items: menus,
