@@ -369,6 +369,7 @@ export default defineComponent({
 </script>
 <style lang="scss">
 .mx-context-menu {
+  pointer-events: auto;
   overflow: hidden;
   position: absolute !important;
   // animation: menuAnimation 4s 0s both;
