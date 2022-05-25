@@ -22,7 +22,7 @@ const initInstance = (options: MenuOptions, container: HTMLElement) => {
   document.body.appendChild(container.firstElementChild as Node)
   return vnode.component
 }
-const $contextmenu = (options: MenuOptions) => {
+export const $contextmenu = (options: MenuOptions) => {
   const container = genContainer()
   initInstance(options, container)
 }
@@ -32,9 +32,11 @@ export default {
     app.config.globalProperties.$contextmenu = $contextmenu
     app.component('ContextMenu', ContextMenuConstructor)
     app.component('ContextSubMenu', ContextSubMenuConstructor)
-    appContext = app._context
   },
 }
 export function useContextMenu() {
   return $contextmenu
+}
+export function mixinAppContext(context: AppContext) {
+  appContext = context
 }

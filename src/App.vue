@@ -3,8 +3,8 @@
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 import logo from "./assets/logo.png";
 import { mdiFaceMan, mdiUndo, mdiCopyleft, mdiPacMan } from "@mdi/js";
-import { useContextMenu } from "../lib/ContextMenuInstance";
-const contextMeun = useContextMenu();
+import { useContextMenu } from "../lib/main";
+const contextMenu = useContextMenu();
 const menus = [
     {
       label: '带图标菜单项',
@@ -84,8 +84,8 @@ const menus = [
   ];
 function openMenu(e: MouseEvent) {
   console.log("🚀 ~ file: App.vue ~ line 87 ~ openMenu ~ performance.now()", performance.now())
-  contextMeun({
-    theme: 'dark',
+  contextMenu({
+    theme: 'light',
     x: e.x,
     y: e.y,
     items: menus,

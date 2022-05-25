@@ -1,7 +1,6 @@
 <script lang="ts">
 import type { PropType } from 'vue'
 import { defineComponent, h } from 'vue'
-import './contextmenu.scss'
 import type { ContextMenuGlobalData, ContextMenuPositionData, MenuItem, MenuOptions } from './ContextMenuDefine'
 import { MenuConstOptions } from './ContextMenuDefine'
 import ContextSubMenuConstructor from './ContextSubMenu.vue'

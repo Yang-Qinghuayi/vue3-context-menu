@@ -43,13 +43,18 @@
       <v-icon size="x-small" :icon="icon.mdiMenuDown"></v-icon>
     </div>
     <v-list
+      dense
       class="rounded mx-context-menu-items bg-surface"
       :style="{
         maxHeight: maxHeight > 0 ? `${maxHeight}px` : '',
       }"
     >
       <template v-for="(item, i) in items">
-        <v-divider v-if="item.divided" :key="`divider-${i}`"></v-divider>
+        <v-divider
+          v-if="item.divided"
+          :key="`divider-${i}`"
+          class="my-1"
+        ></v-divider>
         <v-list-item
           v-else
           :key="`item-${i}`"
@@ -65,10 +70,13 @@
             v-if="item.icon"
             size="small"
             :icon="item.icon"
-            class="mr-2 text-onSurfaceVariant"
+            class="mr-3 text-onSurfaceVariant"
           ></v-icon>
 
-          <v-list-item-title>
+          <v-list-item-title
+            class="text-caption"
+            :class="listTitleMargin(item)"
+          >
             {{ item.label }}
           </v-list-item-title>
           <v-icon
@@ -99,7 +107,7 @@
 
 <script lang="ts">
 import { mdiMenuDown, mdiMenuRight, mdiMenuUp } from "@mdi/js";
-import type { PropType, ComponentPublicInstance } from "vue";
+import { PropType, ComponentPublicInstance, computed } from "vue";
 import {
   defineComponent,
   onBeforeUnmount,
@@ -171,6 +179,12 @@ export default defineComponent({
     });
     const menuHeight = ref(0);
 
+    const hasIcon = computed(() => {
+      return prop.items.some((i) => !!i.icon);
+    });
+    const hasSubMenu = computed(() => {
+      return prop.items.some((i) => i.children?.length);
+    });
     //显示和隐藏子菜单
     function showChildItem(e: Event, item: MenuItem) {
       if (item.disabled || !item.children || item.children.length == 0) return;
@@ -261,7 +275,9 @@ export default defineComponent({
         //如果X绝对位置超出屏幕，那么减去超出的宽度
         // todo 溢出pin到左侧
         const absRight =
-          _globalData.parentPosition.x + position.value.x + _menu.$el.offsetWidth;
+          _globalData.parentPosition.x +
+          position.value.x +
+          _menu.$el.offsetWidth;
         if (absRight > _globalData.screenSize.w) {
           newPos.x -= absRight - _globalData.screenSize.w;
         }
@@ -302,11 +318,20 @@ export default defineComponent({
     });
     async function startAnimation() {
       await nextTick();
-      const el = menu.value?.$el ;
+      const el = menu.value?.$el;
       const height = el.scrollHeight ?? 0;
       menuHeight.value = height;
-      el.style.animation = "menuAnimation 0.4s 0s both";
+      await nextTick();
+
+      el.style.animation = "menuAnimation 0.3s ease 0s both";
+      await new Promise((resolve) => setTimeout(resolve, 300))
       el.style.overflow = "visible";
+    }
+    function listTitleMargin(item: MenuItem) {
+      return {
+        "ml-8": !item.icon && hasIcon.value,
+        "mr-5": !(item.children && item.children.length) && hasSubMenu.value,
+      };
     }
     return {
       menu,
@@ -334,8 +359,84 @@ export default defineComponent({
         mdiMenuUp,
       },
       menuHeight,
+      listTitleMargin,
       // menuWidth,
     };
   },
 });
 </script>
+<style lang="scss">
+.mx-context-menu {
+  overflow: hidden;
+  position: absolute !important;
+  // animation: menuAnimation 4s 0s both;
+  transform-origin: left;
+  height: 0;
+  .mx-context-menu-items {
+    position: relative;
+    overflow: hidden;
+    overflow-y: scroll;
+    &.menu-overflow {
+      padding: 16px 0;
+    }
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    .mx-context-menu-item {
+      animation: menuItemAnimation 0.3s 0s both;
+      user-select: none;
+      padding-inline-start: 12px !important;
+      padding-inline-end: 12px !important;
+      display: flex;
+      align-items: center;
+      &.v-list-item--disabled {
+        filter: opacity(0.6);
+      }
+    }
+  }
+  .mx-context-menu-updown {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 10px;
+    border-radius: 10px;
+    user-select: none;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .mx-context-menu-updown.up {
+    top: 0;
+  }
+  .mx-context-menu-updown.down {
+    bottom: 0;
+  }
+}
+
+@keyframes menuAnimation {
+  0% {
+    opacity: 0;
+    // transform: scale(0.5);
+  }
+
+  100% {
+    height: var(--height);
+    opacity: 1;
+    // border-radius: 8px;
+    // transform: scale(1);
+  }
+}
+
+@keyframes menuItemAnimation {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+</style>
