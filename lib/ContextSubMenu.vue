@@ -4,7 +4,7 @@
     :theme="theme"
     ref="menu"
     :elevation="2"
-    class="rounded mx-context-menu bg-surface py-0"
+    class="mx-context-menu bg-surface py-0"
     :class="{
       'menu-overflow': menuOverflow,
       ready: menuReady,
@@ -44,7 +44,7 @@
     </div>
     <v-list
       dense
-      class="rounded mx-context-menu-items bg-surface"
+      class="mx-context-menu-items bg-surface"
       :style="{
         maxHeight: maxHeight > 0 ? `${maxHeight}px` : '',
       }"
@@ -53,7 +53,6 @@
         <v-divider
           v-if="item.divided"
           :key="`divider-${i}`"
-          class="my-1"
         ></v-divider>
         <v-list-item
           v-else
@@ -118,7 +117,7 @@ import {
   nextTick,
 } from "vue";
 
-import { useElementBounding, useElementSize } from "@vueuse/core";
+import { useElementBounding } from "@vueuse/core";
 import type {
   ContextMenuGlobalData,
   ContextMenuPositionData,
@@ -126,6 +125,8 @@ import type {
   MenuOptions,
 } from "./ContextMenuDefine";
 import { MenuConstOptions } from "./ContextMenuDefine";
+
+const deley = (duration: number) => new Promise((resolve) => setTimeout(resolve, duration))
 export default defineComponent({
   name: "ContextSubMenu",
   props: {
@@ -186,11 +187,12 @@ export default defineComponent({
       return prop.items.some((i) => i.children?.length);
     });
     //显示和隐藏子菜单
-    function showChildItem(e: Event, item: MenuItem) {
+    async function showChildItem(e: Event, item: MenuItem) {
       if (item.disabled || !item.children || item.children.length == 0) return;
       if (activeItem.value === item) return;
 
       //同步父菜单的位置
+      // await deley(250)
       activeItem.value = item;
       childGlobalData.value.parentPosition.x =
         globalData.value.parentPosition.x + position.value.x;
@@ -211,7 +213,7 @@ export default defineComponent({
       nextShouldHideItem = activeItem.value;
       setTimeout(() => {
         if (nextShouldHideItem === activeItem.value) activeItem.value = null;
-      }, 200);
+      }, 300);
     }
 
     watch(activeItem, (newV: MenuItem | null, oldV: MenuItem | null) => {
@@ -323,8 +325,8 @@ export default defineComponent({
       menuHeight.value = height;
       await nextTick();
 
-      el.style.animation = "menuAnimation 0.3s ease 0s both";
-      await new Promise((resolve) => setTimeout(resolve, 300))
+      el.style.animation = "menuAnimation 0.3s cubic-bezier(0.1, 0.9, 0.2, 1) 0s both";
+      await deley(300)
       el.style.overflow = "visible";
     }
     function listTitleMargin(item: MenuItem) {
@@ -376,6 +378,7 @@ export default defineComponent({
     position: relative;
     overflow: hidden;
     overflow-y: scroll;
+    border-radius: inherit;
     &.menu-overflow {
       padding: 16px 0;
     }
@@ -385,8 +388,8 @@ export default defineComponent({
     .mx-context-menu-item {
       animation: menuItemAnimation 0.3s 0s both;
       user-select: none;
-      padding-inline-start: 12px !important;
-      padding-inline-end: 12px !important;
+      padding-inline-start: 10px !important;
+      padding-inline-end: 10px !important;
       display: flex;
       align-items: center;
       &.v-list-item--disabled {
@@ -418,14 +421,14 @@ export default defineComponent({
 @keyframes menuAnimation {
   0% {
     opacity: 0;
-    // transform: scale(0.5);
+    transform: translate3d(0px, -10px, 0px);
   }
 
   100% {
     height: var(--height);
     opacity: 1;
-    // border-radius: 8px;
-    // transform: scale(1);
+    transform: translate3d(0px, 0px, 0px);
+    border-radius: 4px;
   }
 }
 

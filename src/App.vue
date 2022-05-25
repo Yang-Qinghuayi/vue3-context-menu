@@ -79,7 +79,55 @@ const menus = [
       divided: true,
     },
     {
+      icon: mdiPacMan,
       label: 'Menu Item 5',
+      children: [
+        {
+          label: 'A submenu item 1',
+          onClick: () => {
+            alert('You click a submenu item')
+          },
+        },
+        {
+          label: 'A submenu item 2',
+          onClick: () => {
+            alert('You click a submenu item')
+          },
+        },
+        {
+          label: 'A submenu item 3',
+          onClick: () => {
+            alert('You click a submenu item')
+          },
+        },
+      ],
+    },
+     {
+      divided: true,
+    },
+    {
+      icon: mdiPacMan,
+      label: 'Menu Item 5',
+      children: [
+        {
+          label: 'A submenu item 1',
+          onClick: () => {
+            alert('You click a submenu item')
+          },
+        },
+        {
+          label: 'A submenu item 2',
+          onClick: () => {
+            alert('You click a submenu item')
+          },
+        },
+        {
+          label: 'A submenu item 3',
+          onClick: () => {
+            alert('You click a submenu item')
+          },
+        },
+      ],
     },
   ];
 function openMenu(e: MouseEvent) {
