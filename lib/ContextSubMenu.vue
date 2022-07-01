@@ -43,7 +43,6 @@
       <v-icon size="x-small" :icon="icon.mdiMenuDown"></v-icon>
     </div>
     <v-list
-      dense
       class="mx-context-menu-items bg-surface"
       :style="{
         maxHeight: maxHeight > 0 ? `${maxHeight}px` : '',
@@ -53,6 +52,7 @@
         <v-divider
           v-if="item.divided"
           :key="`divider-${i}`"
+          class="my-2"
         ></v-divider>
         <v-list-item
           v-else
@@ -67,20 +67,21 @@
         >
           <v-icon
             v-if="item.icon"
-            size="small"
             :icon="item.icon"
-            class="mr-3 text-onSurfaceVariant"
+            size="24"
+            class="text-onSurfaceVariant mr-3"
           ></v-icon>
 
           <v-list-item-title
-            class="text-caption"
+            class="text-onSurface"
             :class="listTitleMargin(item)"
           >
             {{ item.label }}
           </v-list-item-title>
           <v-icon
             v-if="item.children && item.children.length > 0"
-            size="small"
+            size="24"
+            class="text-onSurfaceVariant"
             :style="{ marginLeft: 'auto' }"
             :icon="icon.mdiMenuRight"
           ></v-icon>
@@ -325,7 +326,7 @@ export default defineComponent({
       menuHeight.value = height;
       await nextTick();
 
-      el.style.animation = "menuAnimation 0.3s cubic-bezier(0.1, 0.9, 0.2, 1) 0s both";
+      el.style.animation = "menuAnimation 0.3s ease-out 0s both";
       await deley(300)
       el.style.overflow = "visible";
     }
@@ -380,6 +381,7 @@ export default defineComponent({
     overflow: hidden;
     overflow-y: scroll;
     border-radius: inherit;
+    padding: 4px 0;
     &.menu-overflow {
       padding: 16px 0;
     }
@@ -387,12 +389,17 @@ export default defineComponent({
       display: none;
     }
     .mx-context-menu-item {
-      animation: menuItemAnimation 0.3s 0s both;
       user-select: none;
-      padding-inline-start: 10px !important;
-      padding-inline-end: 10px !important;
+      padding-inline-start: 12px !important;
+      padding-inline-end: 12px !important;
       display: flex;
       align-items: center;
+      min-height: 48px;
+      .v-list-item-title {
+        font-size: 14px;
+        font-weight: 500;
+        max-width: 280px;
+      }
       &.v-list-item--disabled {
         filter: opacity(0.6);
       }
@@ -433,14 +440,4 @@ export default defineComponent({
   }
 }
 
-@keyframes menuItemAnimation {
-  0% {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
 </style>
