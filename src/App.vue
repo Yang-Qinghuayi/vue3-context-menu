@@ -2,7 +2,7 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 import logo from "./assets/logo.png";
-import { mdiFaceMan, mdiUndo, mdiCopyleft, mdiPacMan } from "@mdi/js";
+import { mdiAccountHeart , mdiArrowCollapseVertical, mdiAccountBox, mdiBriefcaseVariant, mdiBusClock, mdiCogs  } from "@mdi/js";
 import { useContextMenu } from "../lib/main";
 const contextMenu = useContextMenu();
 const menus = [
@@ -11,7 +11,7 @@ const menus = [
       onClick: () => {
         alert('You click a menu item')
       },
-      icon: mdiFaceMan,
+      icon: mdiAccountHeart,
     },
     {
       label: '菜单项 2',
@@ -19,11 +19,11 @@ const menus = [
       onClick: () => {
         alert('You click a menu item')
       },
-      icon: mdiUndo,
+      icon: mdiArrowCollapseVertical,
     },
     {
-      label: '带子菜单',
-      icon: mdiCopyleft,
+      label: '带子菜单 很长 很长 很长 很长 很长',
+      icon: mdiAccountBox,
       onClick: () => {
         alert('You click a menu item')
       },
@@ -50,7 +50,7 @@ const menus = [
     },
     {
       label: '带子菜单 4',
-      icon: mdiPacMan,
+      icon: mdiBriefcaseVariant,
       onClick: () => {
         alert('You click a menu item')
       },
@@ -79,7 +79,7 @@ const menus = [
       divided: true,
     },
     {
-      icon: mdiPacMan,
+      icon: mdiBusClock,
       label: 'Menu Item 5',
       children: [
         {
@@ -102,11 +102,8 @@ const menus = [
         },
       ],
     },
-     {
-      divided: true,
-    },
     {
-      icon: mdiPacMan,
+      icon: mdiCogs,
       label: 'Menu Item 5',
       children: [
         {
@@ -133,7 +130,7 @@ const menus = [
 function openMenu(e: MouseEvent) {
   console.log("🚀 ~ file: App.vue ~ line 87 ~ openMenu ~ performance.now()", performance.now())
   contextMenu({
-    theme: 'light',
+    theme: 'RedSandDunesLight',
     x: e.x,
     y: e.y,
     items: menus,

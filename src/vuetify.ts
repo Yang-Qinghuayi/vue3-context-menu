@@ -8,7 +8,7 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/lib/components/index'
 import * as directives from 'vuetify/lib/directives/index'
 import { aliases, mdi } from 'vuetify/lib/iconsets/mdi-svg'
-
+import themes from './theme'
 export default createVuetify({
     components,
     directives,
@@ -18,5 +18,9 @@ export default createVuetify({
         sets: {
         mdi,
         },
-    }
+    },
+    theme: {
+        defaultTheme: 'RedSandDunesLight',
+        themes,
+      },
 })
