@@ -4,7 +4,10 @@
 import logo from "./assets/logo.png";
 import { mdiAccountHeart , mdiArrowCollapseVertical, mdiAccountBox, mdiBriefcaseVariant, mdiBusClock, mdiCogs  } from "@mdi/js";
 import { useContextMenu } from "../lib/main";
+import { ref } from "vue";
 const contextMenu = useContextMenu();
+const x = ref(0)
+const y = ref(0)
 const menus = [
     {
       label: '带图标菜单项',
@@ -126,38 +129,53 @@ const menus = [
         },
       ],
     },
+     {
+      label: '带图标菜单项',
+      icon: mdiAccountHeart,
+    },
+     {
+      label: '带图标菜单项',
+      icon: mdiAccountHeart,
+    },
+     {
+      label: '带图标菜单项',
+      icon: mdiAccountHeart,
+    },
+     {
+      label: '带图标菜单项',
+      icon: mdiAccountHeart,
+    },
+     {
+      label: '带图标菜单项',
+      icon: mdiAccountHeart,
+    },
+     {
+      label: '带图标菜单项',
+      icon: mdiAccountHeart,
+    },
   ];
 function openMenu(e: MouseEvent) {
   console.log("🚀 ~ file: App.vue ~ line 87 ~ openMenu ~ performance.now()", performance.now())
+  x.value = e.x
+  y.value = e.y
   contextMenu({
-    theme: 'RedSandDunesLight',
+    theme: 'BlueMountainsLight',
     x: e.x,
     y: e.y,
     items: menus,
+    offsetFooter: 64,
+    customClass: 'bg-surfaceVariant'
   });
 }
 </script>
 
 <template>
   <v-app>
-    <v-app-bar>
-      <v-img alt="Vue logo" :src="logo" width="46" />
-    </v-app-bar>
     <v-main>
-      <v-container class="d-flex justify-center flex-column align-center pa-4">
-        <v-btn color="primary" class="mb-2">hello vuetify</v-btn>
-        <v-card
-          elevation="2"
-          height="300"
-          width="300"
-          color="grey"
-          @contextmenu.prevent="openMenu"
-          v-ripple
-          class="d-flex justify-center align-center"
-        >
-          右键这里
-        </v-card>
-      </v-container>
+      <div class="d-flex justify-center flex-column align-center pa-0 fill-height" @contextmenu.prevent="openMenu">
+     x: {{ x }}
+     y: {{ y }}
+      </div>
     </v-main>
   </v-app>
 </template>

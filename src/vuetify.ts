@@ -20,7 +20,7 @@ export default createVuetify({
         },
     },
     theme: {
-        defaultTheme: 'RedSandDunesLight',
+        defaultTheme: 'BlueMountainsLight',
         themes,
       },
 })
