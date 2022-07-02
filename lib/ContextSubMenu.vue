@@ -4,7 +4,7 @@
     :theme="theme"
     ref="menu"
     :elevation="2"
-    class="mx-context-menu bg-surface py-0"
+    class="mx-context-menu py-0"
     :class="{
       'menu-overflow': menuOverflow,
       ready: menuReady,
@@ -43,7 +43,7 @@
       <v-icon size="x-small" :icon="icon.mdiMenuDown"></v-icon>
     </div>
     <v-list
-      class="mx-context-menu-items bg-surface"
+      class="mx-context-menu-items"
       :style="{
         maxHeight: maxHeight > 0 ? `${maxHeight}px` : '',
       }"
@@ -128,6 +128,7 @@ import type {
 import { MenuConstOptions } from "./ContextMenuDefine";
 
 const deley = (duration: number) => new Promise((resolve) => setTimeout(resolve, duration))
+const scrollBtnHeight = 4
 export default defineComponent({
   name: "ContextSubMenu",
   props: {
@@ -259,7 +260,7 @@ export default defineComponent({
     //滚动
     function onScroll(down: boolean) {
       if (menu.value) {
-        menu.value.$el.scrollTop += down ? 30 : -30;
+        menu.value.$el.scrollTop += down ? 8 : -8;
       }
     }
 
@@ -275,19 +276,21 @@ export default defineComponent({
           y: position.value.y,
         } as ContextMenuPositionData;
 
-        //如果X绝对位置超出屏幕，那么减去超出的宽度
-        // todo 溢出pin到左侧
+        //如果X绝对位置超出屏幕， pin到左侧
         const absRight =
           _globalData.parentPosition.x +
           position.value.x +
           _menu.$el.offsetWidth;
         if (absRight > _globalData.screenSize.w) {
-          newPos.x -= absRight - _globalData.screenSize.w;
+          newPos.x = position.value.x - _menu.$el.offsetWidth
+          // newPos.x -= absRight - _globalData.screenSize.w;
         }
 
+        console.log(_menu.$el.scrollHeight, _globalData)
+
         //如果高度超出屏幕，那么限制最高高度
-        if (_menu.$el.offsetHeight > _globalData.screenSize.h - 30) {
-          maxHeight.value = _globalData.screenSize.h - 30;
+        if (_menu.$el.scrollHeight > _globalData.screenSize.h - scrollBtnHeight * 2) {
+          maxHeight.value = _globalData.screenSize.h - 8;
           //  强制限制Y坐标为0
           newPos.y = -_globalData.parentPosition.y;
           menuOverflow.value = true;
@@ -298,9 +301,10 @@ export default defineComponent({
           const absTop =
             _globalData.parentPosition.y +
             position.value.y +
-            _menu.$el.offsetHeight;
+            _menu.$el.scrollHeight;
+          const offset = options.value.offsetFooter ?? 0
           if (absTop > _globalData.screenSize.h) {
-            newPos.y -= absTop - _globalData.screenSize.h + 30;
+            newPos.y -= absTop - _globalData.screenSize.h + offset + scrollBtnHeight * 2;
           }
         }
 
@@ -326,8 +330,8 @@ export default defineComponent({
       menuHeight.value = height;
       await nextTick();
 
-      el.style.animation = "menuAnimation 0.3s ease-out 0s both";
-      await deley(300)
+      el.style.animation = "menuAnimation 0.25s ease-out 0s both";
+      await deley(250)
       el.style.overflow = "visible";
     }
     function listTitleMargin(item: MenuItem) {
@@ -381,6 +385,7 @@ export default defineComponent({
     overflow: hidden;
     overflow-y: scroll;
     border-radius: inherit;
+    background: inherit;
     padding: 4px 0;
     &.menu-overflow {
       padding: 16px 0;

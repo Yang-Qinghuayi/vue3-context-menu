@@ -18,6 +18,7 @@ export interface MenuOptions {
   iconFontClass?: string
   maxWidth?: number
   minWidth?: number
+  offsetFooter?: number
   _context?: AppContext
 }
 export interface MenuItem {
