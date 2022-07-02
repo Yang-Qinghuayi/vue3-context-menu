@@ -7,8 +7,11 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.2.16",
-    "vuetify": "3.0.0-beta.2"
+    "vue": "^3.2.37",
+    "vuetify": "next"
+  },
+  "peerDependencies": {
+    "vuetify": "next"
   },
   "devDependencies": {
     "@mdi/js": "^6.7.96",
