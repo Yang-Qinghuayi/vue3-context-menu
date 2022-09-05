@@ -18,7 +18,7 @@ specifiers:
 
 dependencies:
   vue: 3.2.37
-  vuetify: 3.0.0-beta.5_vue@3.2.37
+  vuetify: 3.0.0-beta.10_vue@3.2.37
 
 devDependencies:
   '@mdi/js': 6.7.96
@@ -2083,15 +2083,15 @@ packages:
       '@vue/server-renderer': 3.2.37_vue@3.2.37
       '@vue/shared': 3.2.37
 
-  /vuetify/3.0.0-beta.5_vue@3.2.37:
-    resolution: {integrity: sha512-mU+pO5ZAZOR2Z7eVBoPwZw6nePxT5Sdqpsa4++Q99TwVxXQ7jl76Cy97v72MkDYWfxjDjj8XvW6IqNPGrJpU8w==}
+  /vuetify/3.0.0-beta.10_vue@3.2.37:
+    resolution: {integrity: sha512-xs5wTbDiwqygalhoMyZl8x8NssLPoi6rjUIwQ9b+1g5OqZZAbLquHx7CnJj0dP0GapBucQsjxZIAno3Vq6V3sw==}
     engines: {node: ^12.20 || >=14.13}
     peerDependencies:
       '@formatjs/intl': ^1.0.0 || ^2.0.0
-      vite-plugin-vuetify: 1.0.0-alpha.12
+      vite-plugin-vuetify: ^1.0.0-alpha.12
       vue: ^3.2.0
       vue-i18n: ^9.0.0
-      webpack-plugin-vuetify: 2.0.0-alpha.11
+      webpack-plugin-vuetify: ^2.0.0-alpha.11
     peerDependenciesMeta:
       '@formatjs/intl':
         optional: true

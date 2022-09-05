@@ -8,7 +8,7 @@
     :class="{
       'menu-overflow': menuOverflow,
       ready: menuReady,
-      [options.customClass as string]: options.customClass,
+      [options.customClass]: options.customClass,
     }"
     :style="{
       maxWidth:
@@ -43,6 +43,7 @@
       <v-icon size="x-small" :icon="icon.mdiMenuDown"></v-icon>
     </div>
     <v-list
+      density="comfortable"
       class="mx-context-menu-items"
       :style="{
         maxHeight: maxHeight > 0 ? `${maxHeight}px` : '',
@@ -65,12 +66,14 @@
           @blur="hideChildItem()"
           @click="onMouseClick(item)"
         >
-          <v-icon
-            v-if="item.icon"
-            :icon="item.icon"
-            size="24"
-            class="text-onSurfaceVariant mr-3"
-          ></v-icon>
+          <template #prepend>
+            <v-icon
+                v-if="item.icon"
+                :icon="item.icon"
+                size="20"
+                class="text-onSurfaceVariant mr-2"
+            ></v-icon>
+          </template>
 
           <v-list-item-title
             class="text-onSurface"
@@ -78,13 +81,15 @@
           >
             {{ item.label }}
           </v-list-item-title>
-          <v-icon
-            v-if="item.children && item.children.length > 0"
-            size="24"
-            class="text-onSurfaceVariant"
-            :style="{ marginLeft: 'auto' }"
-            :icon="icon.mdiMenuRight"
-          ></v-icon>
+          <template #append>
+            <v-icon
+                v-if="item.children && item.children.length > 0"
+                size="20"
+                class="text-onSurfaceVariant"
+                :icon="icon.mdiMenuRight"
+            ></v-icon>
+          </template>
+
         </v-list-item>
       </template>
     </v-list>
@@ -106,28 +111,24 @@
 </template>
 
 <script lang="ts">
-import { mdiMenuDown, mdiMenuRight, mdiMenuUp } from "@mdi/js";
-import { PropType, ComponentPublicInstance, computed } from "vue";
+import {mdiMenuDown, mdiMenuRight, mdiMenuUp} from "@mdi/js";
 import {
+  ComponentPublicInstance,
+  computed,
   defineComponent,
+  nextTick,
   onBeforeUnmount,
   onMounted,
+  PropType,
   ref,
   toRefs,
-  watch,
-  nextTick,
+  watch
 } from "vue";
 
-import { useElementBounding } from "@vueuse/core";
-import type {
-  ContextMenuGlobalData,
-  ContextMenuPositionData,
-  MenuItem,
-  MenuOptions,
-} from "./ContextMenuDefine";
-import { MenuConstOptions } from "./ContextMenuDefine";
+import {useElementBounding} from "@vueuse/core";
+import type {ContextMenuGlobalData, ContextMenuPositionData, MenuItem, MenuOptions,} from "./ContextMenuDefine";
+import {MenuConstOptions} from "./ContextMenuDefine";
 
-const deley = (duration: number) => new Promise((resolve) => setTimeout(resolve, duration))
 const scrollBtnHeight = 4
 export default defineComponent({
   name: "ContextSubMenu",
@@ -286,8 +287,6 @@ export default defineComponent({
           // newPos.x -= absRight - _globalData.screenSize.w;
         }
 
-        console.log(_menu.$el.scrollHeight, _globalData)
-
         //如果高度超出屏幕，那么限制最高高度
         if (_menu.$el.scrollHeight > _globalData.screenSize.h - scrollBtnHeight * 2) {
           maxHeight.value = _globalData.screenSize.h - 8;
@@ -314,8 +313,12 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      startAnimation();
-      solveOverflowTimeOut = window.setTimeout(() => doCheckPos(), 100);
+      nextTick().then(() => {
+        doCheckPos()
+        // solveOverflowTimeOut = window.setTimeout(() => , 0);
+        startAnimation();
+      })
+
     });
     onBeforeUnmount(() => {
       if (solveOverflowTimeOut > 0) {
@@ -326,13 +329,8 @@ export default defineComponent({
     async function startAnimation() {
       await nextTick();
       const el = menu.value?.$el;
-      const height = el.scrollHeight ?? 0;
-      menuHeight.value = height;
-      await nextTick();
-
-      el.style.animation = "menuAnimation 0.25s ease-out 0s both";
-      await deley(250)
-      el.style.overflow = "visible";
+      menuHeight.value = el.scrollHeight ?? 0;
+      el.style.animation = "menuAnimation 150ms linear 0s both";
     }
     function listTitleMargin(item: MenuItem) {
       return {
@@ -375,18 +373,17 @@ export default defineComponent({
 <style lang="scss">
 .mx-context-menu {
   pointer-events: auto;
-  overflow: hidden;
+  //overflow: initial;
   position: absolute !important;
   // animation: menuAnimation 4s 0s both;
-  transform-origin: left;
-  height: 0;
+  transform-origin: top left;
+  //height: 0;
   .mx-context-menu-items {
     position: relative;
     overflow: hidden;
     overflow-y: scroll;
     border-radius: inherit;
     background: inherit;
-    padding: 4px 0;
     &.menu-overflow {
       padding: 16px 0;
     }
@@ -399,14 +396,16 @@ export default defineComponent({
       padding-inline-end: 12px !important;
       display: flex;
       align-items: center;
-      min-height: 48px;
       .v-list-item-title {
-        font-size: 14px;
+        font-size: 0.875rem;
         font-weight: 500;
         max-width: 280px;
       }
+      .v-list-item__append {
+        margin-left: auto;
+      }
       &.v-list-item--disabled {
-        filter: opacity(0.6);
+        filter: opacity(0.38);
       }
     }
   }
@@ -434,13 +433,13 @@ export default defineComponent({
 @keyframes menuAnimation {
   0% {
     opacity: 0;
-    transform: translate3d(0px, -10px, 0px);
+    transform: scale(0.95);;
   }
 
   100% {
-    height: var(--height);
+    //height: var(--height);
     opacity: 1;
-    transform: translate3d(0px, 0px, 0px);
+    transform: scale(1);
     border-radius: 4px;
   }
 }
