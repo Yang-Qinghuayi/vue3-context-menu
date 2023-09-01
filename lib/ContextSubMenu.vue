@@ -97,6 +97,7 @@
       v-if="activeItem && activeItem.children"
       ref="childMenu"
       :z-index="zIndex + 1"
+      :level="level + 1"
       :items="activeItem.children"
       :parent-item="activeItem"
       :options="options"
@@ -161,6 +162,10 @@ export default defineComponent({
       type: String,
       default: "light",
     },
+    level: {
+      type: Number,
+      default: 0,
+    }
   },
   emits: ["close", "keepOpen", "preUpdatePos"],
   setup(prop, context) {
@@ -191,6 +196,7 @@ export default defineComponent({
     });
     //显示和隐藏子菜单
     async function showChildItem(e: Event, item: MenuItem) {
+
       if (item.disabled || !item.children || item.children.length == 0) return;
       if (activeItem.value === item) return;
 
@@ -283,7 +289,12 @@ export default defineComponent({
           position.value.x +
           _menu.$el.offsetWidth;
         if (absRight > _globalData.screenSize.w) {
-          newPos.x = position.value.x - _menu.$el.offsetWidth
+          if (prop.level  === 0) {
+            newPos.x = position.value.x - _menu.$el.offsetWidth
+          } else {
+            const parentMenu = _menu.$parent?.$parent?.$el
+            newPos.x = position.value.x - _menu.$el.offsetWidth - parentMenu.offsetWidth - 2
+          }
           // newPos.x -= absRight - _globalData.screenSize.w;
         }
 
@@ -330,7 +341,7 @@ export default defineComponent({
       await nextTick();
       const el = menu.value?.$el;
       menuHeight.value = el.scrollHeight ?? 0;
-      el.style.animation = "menuAnimation 150ms linear 0s both";
+      el.style.animation = "menuAnimation 150ms ease-in-out 0s both";
     }
     function listTitleMargin(item: MenuItem) {
       return {
