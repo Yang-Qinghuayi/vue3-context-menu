@@ -185,7 +185,7 @@ function openMenu(e: MouseEvent) {
   );
   x.value = e.x;
   y.value = e.y;
-  contextMenu({
+  const instance = contextMenu({
     theme: "BlueMountainsLight",
     x: e.x,
     y: e.y,
@@ -209,5 +209,4 @@ function openMenu(e: MouseEvent) {
   </v-app>
 </template>
 
-<style>
-</style>
+<style></style>

@@ -24,7 +24,7 @@ const initInstance = (options: MenuOptions, container: HTMLElement) => {
 }
 export const $contextmenu = (options: MenuOptions) => {
   const container = genContainer()
-  initInstance(options, container)
+  return initInstance(options, container)
 }
 
 export default {

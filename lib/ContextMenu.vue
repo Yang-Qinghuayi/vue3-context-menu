@@ -65,29 +65,28 @@ export default defineComponent({
       this.currentShowPos.x = newPos.x;
       this.currentShowPos.y = newPos.y;
     },
-    onHostMouseUp(e : MouseEvent) {
-              console.log('onHostMouseUp', e.target.className)
-      if((e.target as HTMLElement).className === 'context-menu-overlay') {
-        this.$emit('update:show', false);
-        this.$emit('close');
+    onHostMouseUp(e: MouseEvent) {
+      if ((e.target as HTMLElement).className === "context-menu-overlay") {
+        this.$emit("update:show", false);
+        this.$emit("close");
       }
     },
   },
   render() {
-    if (!this.show) return [];
+    if (!this.show) return null;
 
     return h(
       "div",
       {
         class: "context-menu-overlay",
         style: {
-          display: this.show ? "flex" : 'none',
+          display: "flex",
           left: 0,
           position: "fixed",
           top: 0,
           bottom: 0,
           right: 0,
-          pointerEvents: 'none',
+          pointerEvents: "none",
           zIndex: this.options.zIndex || MenuConstOptions.defaultStartZindex,
         },
         onMouseUp: this.onHostMouseUp,
@@ -101,7 +100,8 @@ export default defineComponent({
             minWidth: this.options.minWidth || MenuConstOptions.defaultMinWidth,
           } as MenuItem,
           options: this.options,
-          zIndex: (this.options.zIndex || MenuConstOptions.defaultStartZindex) + 1,
+          zIndex:
+            (this.options.zIndex || MenuConstOptions.defaultStartZindex) + 1,
           globalData: {
             parentPosition: {
               x: 0,
